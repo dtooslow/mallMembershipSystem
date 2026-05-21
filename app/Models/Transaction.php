@@ -9,6 +9,9 @@ class Transaction extends Model
     protected $fillable = [
         'user_id',
         'shop_id',
+        'product_id',
+        'quantity',
+        'description',
         'amount',
         'points_earned',
     ];
@@ -21,5 +24,10 @@ class Transaction extends Model
     public function shop()
     {
         return $this->belongsTo(Shop::class);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class)->withDefault(['name' => 'N/A']);
     }
 }

@@ -24,9 +24,32 @@ class ShopController extends Controller
             'name' => 'required|string|max:255',
             'category' => 'nullable|string|max:255',
             'location' => 'nullable|string|max:255',
+            'image' => 'nullable|url',
+            // Initial product optional fields
+            'product_name' => 'nullable|required_with:product_price,product_sale_price|string|max:255',
+            'product_description' => 'nullable|string',
+            'product_price' => 'nullable|required_with:product_name|numeric|min:0.01',
+            'product_sale_price' => 'nullable|required_with:product_name|numeric|min:0.01',
+            'product_image' => 'nullable|url',
         ]);
 
-        Shop::create($validated);
+        $shop = Shop::create([
+            'name' => $validated['name'],
+            'category' => $validated['category'] ?? null,
+            'location' => $validated['location'] ?? null,
+            'image' => $validated['image'] ?? null,
+        ]);
+
+        if (!empty($validated['product_name'])) {
+            $shop->products()->create([
+                'name' => $validated['product_name'],
+                'description' => $validated['product_description'] ?? null,
+                'price' => $validated['product_price'],
+                'sale_price' => $validated['product_sale_price'],
+                'image' => $validated['product_image'] ?? null,
+                'is_on_sale' => true,
+            ]);
+        }
 
         return redirect()->route('shops.index')->with('success', 'Shop created successfully.');
     }
@@ -38,7 +61,8 @@ class ShopController extends Controller
 
     public function edit(Shop $shop)
     {
-        return view('shops.edit', compact('shop'));
+        $products = $shop->products()->latest()->get();
+        return view('shops.edit', compact('shop', 'products'));
     }
 
     public function update(Request $request, Shop $shop)
@@ -47,6 +71,7 @@ class ShopController extends Controller
             'name' => 'required|string|max:255',
             'category' => 'nullable|string|max:255',
             'location' => 'nullable|string|max:255',
+            'image' => 'nullable|url',
         ]);
 
         $shop->update($validated);
@@ -58,5 +83,11 @@ class ShopController extends Controller
     {
         $shop->delete();
         return redirect()->route('shops.index')->with('success', 'Shop deleted successfully.');
+    }
+
+    public function showPublic(Shop $shop)
+    {
+        $products = $shop->products()->where('is_on_sale', true)->get();
+        return view('shops.public_show', compact('shop', 'products'));
     }
 }

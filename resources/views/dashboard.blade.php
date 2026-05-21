@@ -76,7 +76,7 @@
 
 <div class="dashboard-hero">
     <h2 class="hero-title">Welcome back, {{ auth()->user()->name ?? 'Admin' }}!</h2>
-    <p class="hero-subtitle">Here's what's happening with your NCCC Mall ecosystem today. Monitor your member growth, incoming transactions, and active shops.</p>
+    <p class="hero-subtitle">Here's what's happening with your NCCC Mall today. Monitor your member growth, incoming transactions, and active shops.</p>
 </div>
 
 <div class="stats-grid">

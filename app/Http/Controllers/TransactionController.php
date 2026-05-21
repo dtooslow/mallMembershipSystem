@@ -17,7 +17,9 @@ class TransactionController extends Controller
 
     public function create()
     {
-        return view('transactions.create');
+        $users = \App\Models\User::all();
+        $shops = \App\Models\Shop::all();
+        return view('transactions.create', compact('users', 'shops'));
     }
 
     public function store(Request $request)
@@ -35,7 +37,12 @@ class TransactionController extends Controller
             // Add points to user's membership
             $membership = Membership::firstOrCreate(
                 ['user_id' => $validated['user_id']],
-                ['tier' => 'Bronze', 'points' => 0]
+                [
+                    'tier' => 'Bronze',
+                    'points' => 0,
+                    'expires_at' => now()->addYear(),
+                    'last_renewed_at' => now(),
+                ]
             );
             
             $membership->points += $validated['points_earned'];

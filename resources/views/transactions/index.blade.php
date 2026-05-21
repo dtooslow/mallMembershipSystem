@@ -2,12 +2,6 @@
 
 @section('title', 'Recent Transactions')
 
-@section('actions')
-    <a href="{{ route('transactions.create') }}" class="btn-glow">
-        <i class="ph-bold ph-plus"></i>
-        <span>Record Transaction</span>
-    </a>
-@endsection
 
 @section('content')
 <div class="glass-card">

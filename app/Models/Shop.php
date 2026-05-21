@@ -10,10 +10,16 @@ class Shop extends Model
         'name',
         'category',
         'location',
+        'image',
     ];
 
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 }

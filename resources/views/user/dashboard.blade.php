@@ -310,6 +310,69 @@
         </div>
 
         @if($membership)
+            <!-- Upcoming Mall Events Section -->
+            <div class="history-section">
+                <h3 class="history-title"><i class="ph-bold ph-calendar"></i> Upcoming Mall Events</h3>
+                
+                @if(isset($events) && $events->count() > 0)
+                    <div class="history-grid" style="grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
+                        @foreach($events as $evt)
+                            <div class="history-card" style="align-items: flex-start; padding: 0; overflow: hidden; border-left: 4px solid
+                                @if($evt->type === 'car_show') var(--primary)
+                                @elseif($evt->type === 'small_concert') var(--secondary)
+                                @elseif($evt->type === 'art_gallery') var(--accent)
+                                @else var(--success) @endif ;">
+
+                                {{-- Banner image --}}
+                                @if($evt->image)
+                                    <div style="width: 100%; height: 160px; overflow: hidden; flex-shrink: 0;">
+                                        <img src="{{ $evt->image }}" alt="{{ $evt->title }}"
+                                             style="width: 100%; height: 100%; object-fit: cover;"
+                                             onerror="this.parentElement.style.display='none'">
+                                    </div>
+                                @endif
+
+                                <div style="display: flex; align-items: flex-start; gap: 14px; padding: 1.1rem 1.25rem; width: 100%;">
+                                    <div class="history-icon" style="flex-shrink: 0;
+                                        @if($evt->type === 'car_show') background: rgba(56, 189, 248, 0.15); color: var(--primary);
+                                        @elseif($evt->type === 'small_concert') background: rgba(129, 140, 248, 0.15); color: var(--secondary);
+                                        @elseif($evt->type === 'art_gallery') background: rgba(244, 114, 182, 0.15); color: var(--accent);
+                                        @else background: rgba(16, 185, 129, 0.15); color: var(--success); @endif">
+                                        @if($evt->type === 'car_show') <i class="ph-fill ph-car"></i>
+                                        @elseif($evt->type === 'small_concert') <i class="ph-fill ph-guitar"></i>
+                                        @elseif($evt->type === 'art_gallery') <i class="ph-fill ph-palette"></i>
+                                        @else <i class="ph-fill ph-calendar-star"></i> @endif
+                                    </div>
+                                    <div class="history-info">
+                                        <div class="history-name">{{ $evt->title }}</div>
+                                        <div class="history-date" style="margin-bottom: 6px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                            <span class="badge" style="padding: 2px 8px; font-size: 0.7rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); text-transform: uppercase;">
+                                                @if($evt->type === 'car_show') Car Show
+                                                @elseif($evt->type === 'small_concert') Concert
+                                                @elseif($evt->type === 'art_gallery') Art Gallery
+                                                @else Special Event @endif
+                                            </span>
+                                            <span style="display: flex; align-items: center; gap: 4px;">
+                                                <i class="ph ph-calendar-blank"></i> {{ $evt->event_date->format('M d, Y') }}
+                                            </span>
+                                        </div>
+                                        <div style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">
+                                            {{ $evt->description ?? "No details provided yet. Don't miss this amazing event!" }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="empty-state">
+                        <i class="ph-bold ph-calendar-blank"></i>
+                        <h3>No Upcoming Events</h3>
+                        <p>There are no events scheduled at this moment. Stay tuned for exciting news!</p>
+                    </div>
+                @endif
+            </div>
+
             <!-- Notifications Section -->
             <div class="history-section">
                 <h3 class="history-title" id="notifications"><i class="ph-bold ph-bell"></i> Notifications & Store Alerts</h3>

@@ -617,6 +617,7 @@
         <div class="nav-links">
             <a href="#shops">Our Shops</a>
             <a href="#rewards">Rewards</a>
+            <a href="#events">Upcoming Events</a>
             
             @if (Route::has('login'))
                 @auth
@@ -936,6 +937,102 @@
                         50% { transform: translateY(-20px); }
                     }
                 </style>
+            @endforelse
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section id="events" class="rewards-section" style="background: linear-gradient(to bottom, var(--bg-light), #FFFFFF); border-top: 1px solid rgba(0,0,0,0.03);">
+        <div class="rewards-blob-1" style="background: radial-gradient(circle, rgba(244, 63, 94, 0.06) 0%, transparent 70%);"></div>
+        <div class="rewards-blob-2" style="background: radial-gradient(circle, rgba(79, 70, 229, 0.06) 0%, transparent 70%);"></div>
+        
+        <div style="text-align: center; margin-bottom: 4rem; position: relative; z-index: 2;">
+            <span style="color: var(--accent); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem; display: block; margin-bottom: 10px;">Experience the Extraordinary</span>
+            <h2 style="font-size: 3.5rem; font-weight: 800; color: var(--text-dark);">Upcoming Mall Events</h2>
+        </div>
+
+        <div class="grid" style="position: relative; z-index: 2; gap: 3rem;">
+            @forelse($events as $event)
+                <div class="reward-card-container">
+                    <div class="reward-card" style="background: rgba(255, 255, 255, 0.85); padding: 0; overflow: hidden;">
+
+                        {{-- Banner image or icon header --}}
+                        @if($event->image)
+                            <div style="width: 100%; height: 180px; overflow: hidden; flex-shrink: 0; border-radius: 30px 30px 0 0;">
+                                <img src="{{ $event->image }}" alt="{{ $event->title }}"
+                                     style="width: 100%; height: 100%; object-fit: cover;"
+                                     onerror="this.parentElement.style.display='none'; this.parentElement.nextElementSibling.style.display='flex';">
+                            </div>
+                            <div style="display: none; justify-content: center; align-items: center; padding-top: 2.5rem;">
+                                <div class="reward-icon-wrapper" style="
+                                    @if($event->type === 'car_show') background: linear-gradient(135deg, #38BDF8, #0284C7);
+                                    @elseif($event->type === 'small_concert') background: linear-gradient(135deg, #A78BFA, #7C3AED);
+                                    @elseif($event->type === 'art_gallery') background: linear-gradient(135deg, #F472B6, #DB2777);
+                                    @else background: linear-gradient(135deg, #34D399, #059669); @endif">
+                                    @if($event->type === 'car_show') <i class="ph-fill ph-car"></i>
+                                    @elseif($event->type === 'small_concert') <i class="ph-fill ph-guitar"></i>
+                                    @elseif($event->type === 'art_gallery') <i class="ph-fill ph-palette"></i>
+                                    @else <i class="ph-fill ph-calendar-star"></i> @endif
+                                </div>
+                            </div>
+                        @else
+                            <div style="padding-top: 2.5rem; padding-left: 2.5rem;">
+                                <div class="reward-icon-wrapper" style="
+                                    @if($event->type === 'car_show') background: linear-gradient(135deg, #38BDF8, #0284C7);
+                                    @elseif($event->type === 'small_concert') background: linear-gradient(135deg, #A78BFA, #7C3AED);
+                                    @elseif($event->type === 'art_gallery') background: linear-gradient(135deg, #F472B6, #DB2777);
+                                    @else background: linear-gradient(135deg, #34D399, #059669); @endif">
+                                    @if($event->type === 'car_show') <i class="ph-fill ph-car"></i>
+                                    @elseif($event->type === 'small_concert') <i class="ph-fill ph-guitar"></i>
+                                    @elseif($event->type === 'art_gallery') <i class="ph-fill ph-palette"></i>
+                                    @else <i class="ph-fill ph-calendar-star"></i> @endif
+                                </div>
+                            </div>
+                        @endif
+
+                        <div style="padding: 1.5rem 2.5rem 2.5rem;">
+                            <h3>{{ $event->title }}</h3>
+                            <p>{{ Str::limit($event->description ?? 'Join us for this exciting upcoming event at NCCC Mall!', 100) }}</p>
+
+                            <div class="reward-footer">
+                                <span class="points-badge" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: unset; -webkit-text-fill-color: white; color: white; padding: 4px 12px; border-radius: 50px; font-size: 0.9rem;">
+                                    <i class="ph-bold ph-calendar-blank"></i> {{ $event->event_date->format('M d, Y') }}
+                                </span>
+                                <span class="stock-badge" style="
+                                    @if($event->type === 'car_show') background: rgba(56, 189, 248, 0.1); color: #0284C7;
+                                    @elseif($event->type === 'small_concert') background: rgba(167, 139, 250, 0.1); color: #7C3AED;
+                                    @elseif($event->type === 'art_gallery') background: rgba(244, 114, 182, 0.1); color: #DB2777;
+                                    @else background: rgba(52, 211, 153, 0.1); color: #059669; @endif">
+                                    @if($event->type === 'car_show') Car Show
+                                    @elseif($event->type === 'small_concert') Concert
+                                    @elseif($event->type === 'art_gallery') Art Gallery
+                                    @else Special Event @endif
+                                </span>
+                            </div>
+
+                            <a href="{{ auth()->check() ? route('user.dashboard') : route('login') }}" class="redeem-btn" style="text-decoration: none;">
+                                View Event details <i class="ph-bold ph-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <!-- Fallback Empty State -->
+                <div style="grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5rem 2rem; background: rgba(255,255,255,0.6); backdrop-filter: blur(20px); border-radius: 40px; border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 30px 60px rgba(0,0,0,0.05); position: relative; overflow: hidden; width: 100%;">
+                    <div style="position: absolute; top: -50%; left: -10%; width: 400px; height: 400px; background: rgba(244, 63, 94, 0.08); filter: blur(80px); border-radius: 50%;"></div>
+                    
+                    <div style="position: relative; z-index: 10; text-align: center;">
+                        <div style="width: 120px; height: 120px; margin: 0 auto 2rem; position: relative; display: flex; align-items: center; justify-content: center;">
+                            <div style="position: absolute; inset: 0; background: linear-gradient(135deg, var(--accent), var(--primary)); border-radius: 30px; transform: rotate(45deg); opacity: 0.15;"></div>
+                            <div style="font-size: 4rem; color: var(--accent);">
+                                <i class="ph-fill ph-calendar-blank"></i>
+                            </div>
+                        </div>
+                        
+                        <h3 style="font-size: 2.5rem; font-weight: 800; color: var(--text-dark); margin-bottom: 1rem; background: linear-gradient(135deg, var(--text-dark), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Stay Tuned...</h3>
+                        <p style="font-size: 1.2rem; color: #64748B; max-width: 450px; margin: 0 auto; line-height: 1.7;">We are scheduling breathtaking concerts, vibrant car shows, and classic art exhibitions. Join our membership to be first to know!</p>
+                    </div>
+                </div>
             @endforelse
         </div>
     </section>

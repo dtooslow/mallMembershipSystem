@@ -368,6 +368,9 @@
         <a href="{{ route('rewards.index') }}" class="nav-link {{ request()->routeIs('rewards.*') ? 'active' : '' }}">
             <i class="ph ph-gift"></i> Rewards
         </a>
+        <a href="{{ route('events.index') }}" class="nav-link {{ request()->routeIs('events.*') ? 'active' : '' }}">
+            <i class="ph ph-calendar"></i> Events
+        </a>
 
         <div style="margin-top: auto;">
             <form method="POST" action="{{ route('logout') }}">

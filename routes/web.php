@@ -8,6 +8,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
 
 use App\Models\Shop;
@@ -16,7 +17,11 @@ use App\Models\Reward;
 Route::get('/', function () {
     $shops = Shop::latest()->take(6)->get();
     $rewards = Reward::latest()->take(6)->get();
-    return view('welcome', compact('shops', 'rewards'));
+    $events = \App\Models\Event::where('event_date', '>=', now()->toDateString())
+                    ->orderBy('event_date', 'asc')
+                    ->take(6)
+                    ->get();
+    return view('welcome', compact('shops', 'rewards', 'events'));
 });
 
 Route::get('/public-shops/{shop}', [ShopController::class, 'showPublic'])->name('shops.public.show');
@@ -43,6 +48,7 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::resource('products', ProductController::class)->except(['index', 'show']);
     Route::patch('products/{product}/toggle', [ProductController::class, 'toggle'])->name('products.toggle');
     Route::patch('products/{product}/toggle-discount', [ProductController::class, 'toggleDiscount'])->name('products.toggle_discount');
+    Route::resource('events', EventController::class);
 });
 
 Route::middleware('auth')->group(function () {
@@ -64,7 +70,11 @@ Route::middleware('auth')->group(function () {
                             ->latest()
                             ->get();
 
-        return view('user.dashboard', compact('transactions', 'redemptions', 'notifications'));
+        $events = \App\Models\Event::where('event_date', '>=', now()->toDateString())
+                            ->orderBy('event_date', 'asc')
+                            ->get();
+
+        return view('user.dashboard', compact('transactions', 'redemptions', 'notifications', 'events'));
     })->name('user.dashboard');
 
     Route::post('/notifications/{notification}/read', function (\App\Models\Notification $notification) {
